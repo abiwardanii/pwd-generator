@@ -12,4 +12,4 @@ def generate_password(length=12):
 
 # Menghasilkan password dengan panjang 12 karakter
 password = generate_password()
-print("Password Anda:", password)
+print("Kata sandi baru:", password)

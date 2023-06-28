@@ -2,14 +2,16 @@ package main
 
 import (
 	"crypto/rand"
-	"encoding/base64"
 	"fmt"
 )
+
+// Daftar karakter yang akan digunakan untuk membuat kata sandi
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]<>?/|\\"
 
 // Fungsi untuk menghasilkan kata sandi acak dengan panjang yang ditentukan
 func generatePassword(length int) (string, error) {
 	// Menentukan ukuran byte yang dibutuhkan untuk menghasilkan kata sandi dengan panjang tertentu
-	byteLength := (length * 3) / 4
+	byteLength := length
 
 	// Membuat buffer byte yang sesuai dengan ukuran yang dibutuhkan
 	buffer := make([]byte, byteLength)
@@ -20,14 +22,18 @@ func generatePassword(length int) (string, error) {
 		return "", err
 	}
 
-	// Mengonversi byte acak menjadi format base64 yang aman
-	password := base64.URLEncoding.EncodeToString(buffer)[:length]
+	// Menghasilkan kata sandi dari buffer byte dengan karakter dari charset
+	password := make([]byte, length)
+	for i := 0; i < length; i++ {
+		randomIndex := int(buffer[i]) % len(charset)
+		password[i] = charset[randomIndex]
+	}
 
-	return password, nil
+	return string(password), nil
 }
 
 func main() {
-	length := 16 // Panjang kata sandi yang diinginkan
+	length := 20 // Panjang kata sandi yang diinginkan
 	password, err := generatePassword(length)
 	if err != nil {
 		fmt.Println("Gagal menghasilkan kata sandi:", err)
